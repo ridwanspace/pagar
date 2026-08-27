@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **README rewritten around the six disciplines.** A thirty-second
+  three-door orientation (gates / graphify / story loop), a
+  disciplines-at-a-glance table that doubles as the reading map, two new
+  mermaid diagrams (the six-station composite loop, and a working day
+  from the 09:00 graph query to the 17:40 overnight launch), concrete
+  install steps for graphify (pip `graphifyy` + the starter skill +
+  first build) and the story loop (copy, guard suite, dry-run,
+  supervised first story), a pick-your-scenario table routing to all
+  seven workflow walkthroughs, a graphify row in the positioning table,
+  and an expanded "what is actually tested" section covering the loop's
+  dry-run guards and the graphify-on-pagar verification.
+
 ### Added
 
 - **The six disciplines woven into the workflow scenarios.** Graphify

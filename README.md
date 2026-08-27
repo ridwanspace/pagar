@@ -11,41 +11,133 @@ with.
 
 ---
 
-## What that is, concretely
+## Thirty seconds, three doors
 
-- **A gate runner** (`gates/`): runs the checks CI would run, locally, in
-  seconds, before the commit. It snapshots your already-failing tests into a
-  **baseline**, then fails **only on failures that are new**. That single
-  idea is what lets a gate survive contact with a repo that already has debt.
-- **A spec-driven method** (`docs/`, `workflows/`): six disciplines — PRD to epics
-  to stories, tests that have been *seen to fail*, lessons that compound, loops
-  that run unattended honestly, and a navigable code graph so context costs scale
-  with the question, not the repository. Stack-neutral, written down, readable in
-  an evening.
-- **The sensor half, on purpose.** A harness needs an actuator (your agent —
-  any of them), sensors (pagar), and memory (specs, baselines, lessons as
-  plain files). pagar is only the sensors and the memory format. Swap agents
-  next year; the fence stays. See
-  [`docs/00-the-sensor-half.md`](docs/00-the-sensor-half.md).
+| If your immediate want is… | Jump to |
+|---|---|
+| "Make my repo safer **today**, before I adopt anything" | [Door 1 — gates](#door-1-gates-in-ten-minutes), the baseline-aware runner |
+| "My agent re-reads the whole repo **every session** — the context bill is absurd" | [Door 2 — graphify](#door-2-graphify-index-once-navigate-cheap), navigation instead of re-reading |
+| "I have sharp stories and I'd rather **sleep** than click through them" | [Door 3 — the story loop](#door-3-the-story-loop-unattended-gated), dry-run proven |
 
-**Zero runtime dependencies** is a hard rule, not a phase. The runner is
+Not sure what any of that means? Read [what pagar is](#what-pagar-is), then
+[how the six disciplines work together](#how-the-six-disciplines-work-together),
+then pick a door. The whole method is [Door 4](#door-4-the-whole-method).
+
+---
+
+## What pagar is
+
+A harness around a coding agent needs three parts: an **actuator** (your
+agent — any of them), **sensors** (checks that observe reality outside the
+model), and **memory** (artifacts that survive the session). pagar is the
+sensor half plus the memory format — deliberately never the actuator. Swap
+agents next year; the fence stays. ([`docs/00-the-sensor-half.md`](docs/00-the-sensor-half.md)
+is the one-page version of this argument.)
+
+Concretely, pagar is **one tool** (the gate runner, `gates/`) plus **six
+disciplines** that make agentic engineering survive contact with production:
+
+| # | Discipline | The question it answers | Where it lives | Start with |
+|---|---|---|---|---|
+| 1 | Spec-driven development | Are we building the right thing? | [`docs/02`](docs/02-spec-driven-development.md) | [`workflows/01`](workflows/01-new-feature.md) |
+| 2 | TDD, with teeth | Does it work — *proven*, not claimed? | [`docs/03`](docs/03-tdd-with-agents.md) | [`docs/03`](docs/03-tdd-with-agents.md) |
+| 3 | Local CI gates — **the runner** | Can we prove it, outside the model? | [`gates/`](gates/README.md), [`docs/05`](docs/05-local-ci-enforcement.md) | [Door 1](#door-1-gates-in-ten-minutes) |
+| 4 | Compound engineering | Does the next task start ahead of this one? | [`docs/04`](docs/04-compound-engineering.md) | [`docs/04`](docs/04-compound-engineering.md) |
+| 5 | Loop engineering | Can it run unattended, without lying to us? | [`docs/08`](docs/08-loop-engineering.md), [`starter/scripts/loop/`](starter/scripts/loop/README.md) | [Door 3](#door-3-the-story-loop-unattended-gated), [`workflows/07`](workflows/07-overnight-run.md) |
+| 6 | Graphify | Can context cost scale with the question, not the repo? | [`docs/09`](docs/09-graphify.md) | [Door 2](#door-2-graphify-index-once-navigate-cheap), [`workflows/05`](workflows/05-joining-a-repo.md) |
+
+Read as a sentence: **a graph tells you where you are, a spec tells you what
+to build, tests tell you it works, gates tell you it is true, the loop does it
+while you sleep, and the lessons make the next one cheaper.**
+
+**Zero runtime dependencies** is a hard rule for the runner, not a phase.
 Node 20+, ESM, standard library only. It starts with a plain `node`, no
 `npm install`, in any repo — including one with no `package.json` at all.
 
 ---
 
-## Quick start
+## How the six disciplines work together
 
-The fastest useful thing is the gate runner alone. Three ways in, same tool:
+One story, start to finish, through all six stations. Every box is a plain
+file in your repository plus a discipline for keeping it truthful:
 
-**1. Install it into your repo** (recommended — you own the copy, it works
+```mermaid
+flowchart TB
+    ORIENT["GRAPHIFY<br/>Where am I?<br/>budgeted query,<br/>not a repo tour"] --> SPEC
+    SPEC["SPEC-DRIVEN<br/>What to build?<br/>a story that cites its files,<br/>locked decisions carry"] --> TDD
+    TDD["TDD WITH TEETH<br/>Prove the rule<br/>break it, watch the guard go red"] --> IMPL
+    IMPL["AGENT IMPLEMENTS<br/>fresh session,<br/>the story + its cited files only"] --> GATE
+    GATE["GATES<br/>prove it, outside the model<br/>baseline-aware:<br/>only NEW failures block"] --> CAPTURE
+    GATE -->|"new failure, named"| IMPL
+    CAPTURE["COMPOUND<br/>bank the win<br/>one lesson, one automation, max"] --> NEXT["the next story<br/>starts ahead of the last"]
+    LOOP["LOOP ENGINEERING<br/>the same cycle, unattended:<br/>gates not markers,<br/>one commit per story"] -.->|"wraps the whole cycle<br/>while you sleep"| SPEC
+    NEXT -.-> ORIENT
+```
+
+Each discipline covers a failure mode the other five cannot:
+
+- **SDD** fixes *building the wrong thing correctly*. It cannot tell you the
+  code is broken.
+- **TDD** fixes *the code is broken*. It cannot stop an agent writing a test
+  that never could fail.
+- **Gates** fix *the claim that it works*. They are outside the model, so
+  confidence does not get a vote. They cannot stop you re-learning the same
+  trap.
+- **Compound engineering** fixes *paying full price twice*. It needs the
+  others to have anything worth recording.
+- **Loop engineering** fixes *the unattended run quietly going wrong* — the
+  confident COMPLETE over a red suite, the flag in the code that `--help`
+  never heard of.
+- **Graphify** fixes *the context bill* — the biggest recurring cost of
+  agentic work — and catches the architectural lies: hidden cross-boundary
+  edges, god nodes the diagram forgot.
+
+Take the first four and you have a disciplined attended workflow. Add the
+fifth and it runs at machine speed. Add the sixth and it scales past the
+context window. The long version, with the adoption ladder, is
+[`docs/10-six-principles-one-workflow.md`](docs/10-six-principles-one-workflow.md).
+
+### A working day with all six
+
+```mermaid
+flowchart LR
+    subgraph M["09:00 — Monday"]
+        M1["graphify query:<br/>where did story 2.2 leave off?"] --> M2["/dev-story resumes<br/>at the first unchecked task"]
+    end
+    subgraph N["11:00 — ship"]
+        N1["gates green,<br/>/code-review, one commit"] --> N2["lesson recorded,<br/>one guard absorbed"]
+    end
+    subgraph E["17:40 — evening"]
+        E1["loop.sh --dry-run,<br/>then one supervised story"] --> E2["the backlog runs overnight,<br/>gated, one commit per story"]
+    end
+    M --> N --> E
+    E -.->|"08:10: run summary, gate logs,<br/>focused diffs, PENDING sign-offs"| M
+```
+
+That day, narrated honestly (including the day the whole workflow gets
+skipped because a version bump does not need it):
+[`workflows/06-a-real-week.md`](workflows/06-a-real-week.md).
+
+---
+
+## Getting started: four doors
+
+Each door works alone. Walk them in order if you are building toward the
+whole method — each one is the precondition for the next.
+
+### Door 1: gates, in ten minutes
+
+The fastest useful thing in this repo, and the foundation everything else
+trusts. Three ways in, same tool:
+
+**Install it into your repo** (recommended — you own the copy, it works
 offline forever, and your agent can read its source):
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/ridwanspace/pagar/main/install.sh | bash -s -- /path/to/your/project
 ```
 
-**2. Run it with no install at all** (npm package `pagar-gates`, binary
+**Run it with no install at all** (npm package `pagar-gates`, binary
 `pagar`, zero dependencies — you only author a `gates.config.json`):
 
 ```bash
@@ -56,7 +148,7 @@ npx pagar-gates --update-baseline   # snapshot today's failures, from a clean tr
 npx pagar-gates                     # from now on, only NEW failures fail
 ```
 
-**3. Just take the directory.** No script, no package, no ceremony:
+**Just take the directory:**
 
 ```bash
 git clone --depth 1 --filter=blob:none --sparse \
@@ -71,13 +163,7 @@ node gates/run-gates.mjs --update-baseline   # from a clean tree
 node gates/run-gates.mjs                     # before every commit
 ```
 
-Whichever way you chose, that is the whole first step. It works before you
-adopt anything else here, and it is useful on its own.
-
-### What it looks like
-
-A run where the code under test has one pre-existing failure and one you just
-introduced:
+What a run looks like — one pre-existing failure, one you just introduced:
 
 ```
   FAIL  backend/pytest unit tests 0.5s
@@ -89,10 +175,131 @@ introduced:
   Do not add them to the baseline to get past this.
 ```
 
-Exit code 1. The new failure is named. The old one is counted and left alone,
-so the thing you broke does not hide inside forty lines of old debt. Full
-manual: [`gates/README.md`](gates/README.md). The reasoning:
+Exit code 1. The new failure is named. The old one is counted and left alone.
+That baseline idea is what lets a gate survive a repo that already has debt.
+Manual: [`gates/README.md`](gates/README.md). Reasoning:
 [`docs/05-local-ci-enforcement.md`](docs/05-local-ci-enforcement.md).
+
+### Door 2: graphify — index once, navigate cheap
+
+The dominant recurring cost of agentic work is the context feed: every
+session re-reads its way to understanding. The fix is old engineering —
+build an index once, navigate it cheaply, update it incrementally. pagar
+ships the method ([`docs/09-graphify.md`](docs/09-graphify.md)) and an
+operating-manual skill for the open-source
+[graphify](https://github.com/Graphify-Labs/graphify) CLI (PyPI `graphifyy`,
+by Safi Shamsi — local tree-sitter ASTs, your code never leaves the machine).
+
+**Install the tool** (one-time, any Python 3.10+):
+
+```bash
+pip install graphifyy          # or: uv tool install graphifyy
+```
+
+**Add the operating manual** next to your agent skills (Claude Code shape;
+adjust the path for your agent):
+
+```bash
+mkdir -p .claude/skills
+cp -r path/to/pagar/starter/.claude/skills/graphify .claude/skills/graphify
+```
+
+**Build the map, then use it:**
+
+```bash
+graphify .          # code-only repos cost ZERO model tokens — deterministic local AST
+                    # → graphify-out/graph.json + GRAPH_REPORT.md (god nodes,
+                    #   surprising cross-boundary connections)
+
+graphify query "who calls the template resolver and through what layer" --budget 1500
+graphify path "AuthModule" "ReportService"
+```
+
+Every question for the rest of the week is now a bounded traversal with
+source locations instead of a repo tour. Keep it fresh with `graphify update .`
+after big pulls. Honest exceptions: a repo smaller than your head does not
+need a graph, and an INFERRED edge is a lead to verify, not a fact.
+
+Where this shows up in practice: joining a repo
+([`workflows/05-joining-a-repo.md`](workflows/05-joining-a-repo.md) — build
+the map on day one, free), Monday re-entry
+([`workflows/04-monday-morning.md`](workflows/04-monday-morning.md)), and
+story file discovery
+([`workflows/01-new-feature.md`](workflows/01-new-feature.md)).
+
+### Door 3: the story loop — unattended, gated
+
+The loop runs the exact skills an engineer runs by hand —
+`/create-story → /dev-story → /code-review → commit` — one fresh headless
+session per phase, one conventional commit per story, with gates between
+phases that check artifacts, never the model's word. What it never does:
+push, switch branches, or trust a `COMPLETE` marker.
+
+**Two preconditions, checked honestly:** the stories are sharp
+(self-sufficient, acceptance criteria a person could disagree about) and the
+gates bite (Door 1). A loop over vague stories is a printer of confident
+wrong code.
+
+**Install it** (you need: the starter's spec pipeline + skills, Door 1
+gates, the Claude Code CLI, `jq`, `git`, `python3`):
+
+```bash
+# the pipeline the loop drives (skills, rules, specs CLI)
+cp -r path/to/pagar/starter/.claude .claude
+# the loop itself
+cp -r path/to/pagar/starter/scripts  scripts
+
+bash scripts/loop/loop.test.sh       # 29 dry-run guards, zero deps, no agent calls
+```
+
+**Prove it before you pay for it:**
+
+```bash
+scripts/loop/loop.sh --dry-run       # prints every story, phase, model, command.
+                                      # Executes nothing. Read it like a bill.
+scripts/loop/loop.sh --story 1.1     # ONE supervised story — the loop's audition
+scripts/loop/loop.sh                 # the backlog, gated, one commit per story
+```
+
+The loop compounds: failures are distilled into `LEARNINGS.md` before
+commit, and the tail of that file rides into every future session. The full
+evening-to-morning run — preflight, supervised first story, what to review
+at 08:10, and what a failure overnight *means* — is
+[`workflows/07-overnight-run.md`](workflows/07-overnight-run.md). The laws
+and the failure taxonomy:
+[`docs/08-loop-engineering.md`](docs/08-loop-engineering.md). Runner's
+manual: [`starter/scripts/loop/README.md`](starter/scripts/loop/README.md).
+
+### Door 4: the whole method
+
+The starter kit is a menu, not a bundle: `CLAUDE.md` template, 11 rule
+files, 13 skills, the spec pipeline CLI, hooks, and agent adapters for
+Codex, Cursor, Kiro, and Antigravity. The adoption order that costs least is
+in [`starter/README.md`](starter/README.md) — gates first, pipeline fifth,
+and it says why. Four worked stacks (Python, Node, Go, Java — the same
+little notes app, all gates green in CI) live in
+[`examples/`](examples/README.md).
+
+---
+
+## Pick your scenario
+
+The [`workflows/`](workflows/README.md) directory is seven ordinary working
+days, with the friction left in. Find yourself in the left column:
+
+| Your situation | Walkthrough |
+|---|---|
+| A feature nobody has specified yet | [`01-new-feature.md`](workflows/01-new-feature.md) — the full pipeline, spec to shipped, plus when the rest goes to the loop |
+| A QA batch or bug report landed | [`02-bug-from-qa.md`](workflows/02-bug-from-qa.md) — triage always, then hotfix or root cause |
+| "We fixed it, but it is still broken on staging" | [`03-fix-not-on-stag.md`](workflows/03-fix-not-on-stag.md) — prove it by content, five verdicts |
+| Monday morning, work in flight | [`04-monday-morning.md`](workflows/04-monday-morning.md) — re-enter without re-deriving |
+| You just joined the repo | [`05-joining-a-repo.md`](workflows/05-joining-a-repo.md) — map on day one, gates day three, `CLAUDE.md` day five |
+| Want the unvarnished picture first | [`06-a-real-week.md`](workflows/06-a-real-week.md) — five days, interruptions included, costs tallied |
+| A backlog of sharp stories and a free night | [`07-overnight-run.md`](workflows/07-overnight-run.md) — preflight, launch, and the morning review in order |
+
+New to the method entirely? Read [`docs/00`](docs/00-the-sensor-half.md),
+then [`docs/01`](docs/01-why.md), then set up [Door 1](#door-1-gates-in-ten-minutes).
+Those give the most value for the least reading.
 
 ---
 
@@ -105,6 +312,7 @@ You may know some of these; here is the honest map:
 | [pre-commit](https://pre-commit.com), [lefthook](https://github.com/evilmartians/lefthook), [lint-staged](https://github.com/lint-staged/lint-staged) | Git-hook frameworks, polyglot, installed via a package manager | pagar is not a hook manager. It is a full-repo, agent-shaped gate runner with baseline semantics, copyable with no install. Hooks are one way to invoke it. |
 | [GitHub spec-kit](https://github.com/github/spec-kit) | A spec-**authoring** workflow (`/speckit.specify → plan → tasks → implement`) as an installed CLI | pagar's spec pipeline is plain markdown you copy in, and pagar goes where spec-kit does not: **enforcement**. Gates that block on regressions, outside the model. |
 | Lint ratchets (rubocop's `--auto-gen-config`, [FlakeHell baseline](https://flakehell.readthedocs.io/commands/baseline.html), [Betterer](https://github.com/phenomnomnominal/betterer)) | Baseline semantics for **one ecosystem's** linter | pagar gives the same known-failures/pass-on-new semantics to **every** gate at once — tests, type checks, lints, builds — across languages, with stable failure keys. |
+| [graphify](https://github.com/Graphify-Labs/graphify) | The knowledge-graph CLI pagar's sixth discipline drives | pagar is not the tool. pagar contributes the method — navigation over re-reading, budgets over binges — and the operating manual. |
 | CI | The same checks, later | pagar runs CI's checks **before** the commit, which is the only moment a fix is cheap. It complements CI; it does not replace it. |
 
 ---
@@ -142,7 +350,7 @@ with the gate runner alone.
 | "my tests keep passing when the code is broken" | `docs/03-tdd-with-agents.md` | Teach the mutation-verify loop, apply it to one real test |
 | "I keep re-explaining the same things" | `docs/04-compound-engineering.md` | Set up `CLAUDE.md`, then rules, then lesson mining |
 | "set up local CI" | `docs/05-local-ci-enforcement.md`, `gates/README.md` | Build the gate ladder for their stack |
-| "I want the agent to run stories unattended" | `docs/08-loop-engineering.md`, `starter/.claude/skills/loop-engineering/SKILL.md` | Teach the loop laws first; a loop over vague stories is a printer of confident wrong code |
+| "I want the agent to run stories unattended" | `docs/08-loop-engineering.md`, `starter/scripts/loop/README.md` | Teach the loop laws first; a loop over vague stories is a printer of confident wrong code |
 | "my agent loop failed / stopped / lied" | `docs/08-loop-engineering.md`, then the skill's step-01 | Diagnose by failure class: phase, gate, blocker, or wiring |
 | "context costs too much / it re-reads the repo every session" | `docs/09-graphify.md`, `starter/.claude/skills/graphify/SKILL.md` | Build the graph once, then query with a budget |
 | "I use Codex / Kiro / Antigravity / Cursor" | `docs/07-agent-tools.md`, `starter/agent-adapters/README.md` | Use the adapter for their tool, warn them it is mapped and not tested |
@@ -198,6 +406,7 @@ starter/.claude/skills/               named procedures, 13 skills, step files
                                       incl. loop-engineering and graphify
 starter/.claude/scripts/specs/        the spec pipeline CLI and its README
 starter/.claude/hooks/                session-start and stop hooks
+starter/scripts/loop/                 the unattended story loop + dry-run guards
 starter/agent-adapters/               Codex, Kiro, Antigravity, Cursor
 
 examples/README.md                    four stacks compared side by side
@@ -331,32 +540,6 @@ fiction. A baseline that grows every time it goes red is not a gate any more.
 Every piece in this repo is built to be cheap enough to actually run, and
 where a piece is not carrying its weight, delete it.
 
-### Why the six principles together, and not just one
-
-Each one covers a specific way an agent fails, and each leaves a gap the next
-one fills:
-
-- **SDD** fixes *building the wrong thing correctly*. It cannot tell you the
-  code is broken.
-- **TDD** fixes *the code is broken*. It cannot stop an agent from writing a
-  test that never could fail.
-- **Local CI gates** fix *the claim that it works*. They are outside the model,
-  so confidence does not get a vote. They cannot stop you re-learning the same
-  trap.
-- **Compound engineering** fixes *paying full price twice*. It needs the other
-  three to have anything worth recording.
-- **Loop engineering** fixes *the unattended run quietly going wrong* — the
-  confident COMPLETE over a red suite, the flag in the code that `--help` never
-  heard of.
-- **Graphify** fixes *the context bill* — the biggest recurring cost of agentic
-  work — and catches the architectural lies: hidden cross-boundary edges, god
-  nodes the diagram forgot.
-
-Take the first four and you have a disciplined attended workflow. Add the fifth
-and it runs at machine speed. Add the sixth and it scales past the context
-window. [`docs/10-six-principles-one-workflow.md`](docs/10-six-principles-one-workflow.md)
-assembles the whole fence, with the adoption ladder.
-
 ---
 
 ## The six principles, briefly
@@ -401,8 +584,8 @@ See [`docs/09-graphify.md`](docs/09-graphify.md).
 
 ### Credit where due
 
-None of the four ideas started here. pagar's contribution is the assembly and
-the fence; the ideas have parents, and they deserve the traffic:
+None of the six disciplines started here. pagar's contribution is the assembly
+and the fence; the ideas have parents, and they deserve the traffic:
 
 - **Spec-driven development.** The agentic lineage:
   [GitHub's spec-kit](https://github.com/github/spec-kit), for making
@@ -450,47 +633,20 @@ the fence; the ideas have parents, and they deserve the traffic:
 
 ---
 
-## Start here
-
-| If you want to | Read |
-|---|---|
-| See what pagar is, in one page | [`docs/00-the-sensor-half.md`](docs/00-the-sensor-half.md) |
-| See what a normal working day looks like | [`workflows/`](workflows/README.md) |
-| Understand why any of this is needed | [`docs/01-why.md`](docs/01-why.md) |
-| Write specs an agent can actually build from | [`docs/02-spec-driven-development.md`](docs/02-spec-driven-development.md) |
-| Make tests mean something when an agent writes them | [`docs/03-tdd-with-agents.md`](docs/03-tdd-with-agents.md) |
-| Make the workflow get cheaper over time | [`docs/04-compound-engineering.md`](docs/04-compound-engineering.md) |
-| Stop broken code before it lands | [`docs/05-local-ci-enforcement.md`](docs/05-local-ci-enforcement.md) |
-| Run agent loops unattended, honestly | [`docs/08-loop-engineering.md`](docs/08-loop-engineering.md) |
-| Pay context for the question, not the repo | [`docs/09-graphify.md`](docs/09-graphify.md) |
-| See all six assembled into one workflow | [`docs/10-six-principles-one-workflow.md`](docs/10-six-principles-one-workflow.md) |
-| Use this with Codex, Kiro, Antigravity, or Cursor | [`docs/07-agent-tools.md`](docs/07-agent-tools.md) |
-| Go deeper, outside this repo | [`docs/06-further-reading.md`](docs/06-further-reading.md) |
-
-New to it? Read `00`, then `01`, then `05`. Those three give the most value
-for the least reading. `05` in particular pays off on the same day you set it
-up.
-
-Not sure it is worth the process? Read
-[`workflows/06-a-real-week.md`](workflows/06-a-real-week.md) instead. It is one
-week of ordinary work, including the day the whole workflow gets skipped
-because a version bump does not need a pipeline.
-
----
-
 ## Repository layout
 
 ```
 gates/             The sensor: baseline-aware local CI runner.
                    Zero dependencies, Node 20+.
-docs/              The method. Stack-neutral. Start at 00.
-workflows/         What the method looks like on an ordinary working day.
+docs/              The method, 11 pages. Stack-neutral. Start at 00.
+workflows/         Seven ordinary working days, friction included.
 starter/           Copy into your project and fill in the placeholders.
   .claude/         Reference implementation, Claude Code shaped.
     skills/        Named procedures, one directory each.
     rules/         Scoped knowledge, loaded only when relevant.
     scripts/       The spec pipeline helper CLI.
     hooks/         Deterministic checkpoints.
+  scripts/loop/    The unattended story loop + its dry-run guard suite.
   agent-adapters/  Mappings for Codex, Kiro, Antigravity, Cursor.
 examples/          Four worked stacks: Python, Node, Go, Java.
 install.sh         One-line installer for the gate runner.
@@ -498,7 +654,8 @@ AGENTS.md          Guidance for agents working on pagar itself.
 ```
 
 pagar gates itself (`gates.config.json` at the root), and CI runs the gate
-runner's test suite on Node 20, 22, and 24, plus all four examples:
+runner's test suite on Node 20, 22, and 24, all four examples, the story
+loop's 29 dry-run guards, and shellcheck on every shell script:
 [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
 
 ---
@@ -512,6 +669,14 @@ Honesty matters more than reach here, so:
 - The **examples** each state exactly which commands were run and which were
   not. All four gate configs are exercised in CI. Where a toolchain was
   unavailable for local verification, the example README says so.
+- The **story loop** ships 29 dry-run guard tests (`bash
+  starter/scripts/loop/loop.test.sh`) that never invoke the agent CLI — run
+  in CI, mutation-verified by breaking the loop on purpose. Its *live*
+  behavior is exercised on Claude Code only.
+- The **graphify discipline** was verified by running the pipeline on pagar
+  itself: 763 nodes, 1441 edges, 43 communities from free AST extraction, and
+  a budgeted query that located the parser functions with exact source
+  locations. The tool is Graphify-Labs'; pagar ships the method and manual.
 - The **starter kit** is exercised end to end on Claude Code only. The Codex,
   Kiro, Antigravity, and Cursor adapters are documented mappings, built from
   each tool's published configuration format. Check them against your
@@ -524,7 +689,7 @@ in this repo is newer than the method.
 
 ## The durable part
 
-The specs, the baselines, and the recorded lessons are plain files in your
+The specs, the baselines, the lessons, and the graph are plain files in your
 repository. They are not stored in a vendor's account, not tied to one editor,
 and not written in a proprietary format. Switch agents next year and they all
 still work. That is deliberate. Tool churn in this space is fast, and anything
