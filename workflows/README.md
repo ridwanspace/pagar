@@ -7,7 +7,7 @@ The [`docs/`](../docs/) pages explain the method. The
 does. This directory answers a different question: on a normal working day, what actually
 happens, in what order, and where does it hurt.
 
-Eleven skills exist. You will use two or three in a typical week. This page is the router.
+Thirteen skills exist. You will use two or three in a typical week. This page is the router.
 
 ---
 
@@ -23,6 +23,7 @@ flowchart TB
     Q1 -->|"'We fixed this but<br/>it is still broken there'"| P["Promotion complaint"]
     Q1 -->|"Nothing. It is Monday<br/>and work is in flight"| M["Normal morning"]
     Q1 -->|"You just joined<br/>this repo"| N["Unfamiliar codebase"]
+    Q1 -->|"A backlog of sharp stories<br/>and a free night"| L["The overnight run<br/>See 07-overnight-run.md"]
 
     F --> Q2{"Does a spec<br/>already exist?"}
     Q2 -->|"No"| CP["/create-prd"]
@@ -48,6 +49,8 @@ flowchart TB
     CS --> DS["/dev-story"]
     DS --> CR["/code-review"]
     CR -.->|"next story"| CS
+    CR -.->|"or hand the backlog<br/>to the loop"| LOOP["scripts/loop/loop.sh<br/>same skills, unattended,<br/>gated"]
+    G["graphify query"] -.->|"scoped context,<br/>token-budgeted"| CS
 ```
 
 ---
@@ -68,6 +71,8 @@ flowchart TB
 | One already-diagnosed defect in shipped code | [`/hotfix`](../starter/.claude/skills/hotfix/) | A smaller process, not a weaker one. It keeps the two checks that catch defects | The fix, a mutation-verified test, one ledger row |
 | "The fix is not on staging" | [`/promotion-audit`](../starter/.claude/skills/promotion-audit/) | It proves the answer from file content, not from commit messages | One of five verdicts plus a message you can send |
 | Docs a teammate or user will read | [`/create-docs`](../starter/.claude/skills/create-docs/) | Reference tables get generated from the contract, never typed by hand | A doc tree, guard tests, and the decision record that keeps it alive |
+| A question about a codebase too big to re-read | [`graphify query`](../docs/09-graphify.md) | One indexed graph, then budgeted traversals with source locations — not a repo tour per question | The neighborhood of the answer, inside a token budget |
+| A backlog of sharp stories you would rather not click through | [`scripts/loop/loop.sh`](../starter/scripts/loop/README.md) | The same skills you run by hand, unattended, with gates between phases that check artifacts | One conventional commit per story, gate-green, lessons banked — see [`07-overnight-run.md`](07-overnight-run.md) |
 
 ---
 
@@ -201,6 +206,7 @@ cheaper rather than just the codebase.
 | [`04-monday-morning.md`](04-monday-morning.md) | Picking up work already in flight, with `suggest-next` and the status mirror |
 | [`05-joining-a-repo.md`](05-joining-a-repo.md) | Week one in an unfamiliar six-year-old codebase, gates first, `CLAUDE.md` last |
 | [`06-a-real-week.md`](06-a-real-week.md) | Five days end to end, including the days where nothing goes to plan |
+| [`07-overnight-run.md`](07-overnight-run.md) | The overnight run: preflight dry-run, one supervised story, and the morning review in order |
 
 ---
 
@@ -222,6 +228,20 @@ The last five subcommands in `help` are labeled heuristic for a reason. `deps`,
 wrote. They print a caveat line saying so. Treat every verdict as a hint to verify. Full
 manual: [`starter/.claude/scripts/specs/README.md`](../starter/.claude/scripts/specs/README.md).
 
+Two more you will type often, once they exist in your repo:
+
+```bash
+graphify query "who calls the template resolver and through what layer" --budget 1500
+graphify path "AuthModule" "ReportService"      # the hops between two concepts, with sources
+
+scripts/loop/loop.sh --dry-run                   # every story, phase, model, and command
+scripts/loop/loop.sh --story 2.3                 # one story, supervised
+```
+
+The first pair pays only when the repo is bigger than your head
+([`docs/09-graphify.md`](../docs/09-graphify.md)). The second pair is the unattended loop —
+dry-run first, always ([`docs/08-loop-engineering.md`](../docs/08-loop-engineering.md)).
+
 ---
 
 ## Further reading
@@ -232,5 +252,8 @@ manual: [`starter/.claude/scripts/specs/README.md`](../starter/.claude/scripts/s
   seen to fail is not evidence.
 - [`docs/04-compound-engineering.md`](../docs/04-compound-engineering.md), the two loops.
 - [`docs/05-local-ci-enforcement.md`](../docs/05-local-ci-enforcement.md), gates and baselines.
+- [`docs/08-loop-engineering.md`](../docs/08-loop-engineering.md), the laws an unattended
+  loop keeps, and the failure taxonomy for the morning after.
+- [`docs/09-graphify.md`](../docs/09-graphify.md), token optimization via navigation.
 - [`starter/.claude/rules/edge-cases.md`](../starter/.claude/rules/edge-cases.md), the
   acceptance-criteria budget these scenarios keep bumping into.

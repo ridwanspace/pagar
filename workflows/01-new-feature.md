@@ -233,6 +233,24 @@ uninterpretable: it could mean a thin corpus or a broken scan. The miner always 
 [`docs/04-compound-engineering.md`](../docs/04-compound-engineering.md) explains why removing it
 is the classic failure in this family of scripts.
 
+### Which files this story touches
+
+Step 02's expensive part starts with a discovery question: which files does story 4.1
+actually touch? On a repo big enough that grep-and-pray costs a session, the knowledge
+graph answers it as a traversal instead of a read-a-thon:
+
+```bash
+graphify query "saved filters: ownership, listing route, and their callers" --budget 1500
+graphify path "AuthModule" "ReportService"
+```
+
+The query returns the neighborhood — the route modules, the auth filter, the callers
+that will notice — with exact source locations, inside a token budget you set. That
+list becomes the story's cited files, which is why the dev story can say "reads only
+the files this story touches" and mean it. The method is
+[`docs/09-graphify.md`](../docs/09-graphify.md); on a repo this size, grep is still
+faster than the build, and the honest move is knowing which repo you are in.
+
 ### What lands on disk
 
 `.claude/specs/implementation_artifacts/epic-04-saved-filters/story-01-create-a-saved-filter.md`,
@@ -436,6 +454,37 @@ offers. You decide.
 
 ---
 
+## Stage 6: the rest of the epic goes to the loop
+
+Story 4.1 took the pipeline personally, and it should — it was the first. Stories 4.2
+through 4.4 now have a spec that locks the decisions, a lessons corpus that mines
+itself, and gates that bite. That is exactly the precondition for the unattended
+story loop ([`docs/08-loop-engineering.md`](../docs/08-loop-engineering.md)):
+
+```bash
+# Preflight: print every story, phase, model, and command it would run. Executes nothing.
+scripts/loop/loop.sh --dry-run --from 4.2
+
+# One supervised story first — you watch the phases and the gates.
+scripts/loop/loop.sh --story 4.2
+
+# Then the rest, overnight, one conventional commit per story.
+scripts/loop/loop.sh --from 4.3
+```
+
+Each phase is a fresh headless session running the same skills you just ran by hand;
+between phases the loop checks artifacts, not the model's word — dev file exists,
+status is `done`, the gates are green, the tree is clean. What you review in the
+morning is per-story commits, gate logs, and a LEARNINGS.md that grew by whatever bit
+the loop overnight. The full evening-to-morning run, including what to check first
+when you wake up, is [`07-overnight-run.md`](07-overnight-run.md).
+
+The boundary is honest: if 4.1 had come out vague, or the gates were still
+skip-heavy, the loop would be a printer of confident wrong code. Sharp stories and
+believable gates first. The loop is the reward, not the shortcut.
+
+---
+
 ## What you have now that you would not have had
 
 - **A spec** that states why a user sees only their own filters, so the next person to touch
@@ -448,8 +497,10 @@ offers. You decide.
 - **A committed team doc** that names the 20-filter limit, readable by someone who has never
   heard of any of this tooling.
 - **A test suite that would actually fail** if the ownership rule were removed, because it
-  creates two users instead of one. That came from a lesson recorded eleven weeks earlier by a
+  creates two users instead of one. That came from a lesson recorded eleven weeks earlier by
   story in a different epic.
+- **A backlog you can delegate.** Stories 4.2-4.4 are self-sufficient and the gates bite,
+  which is precisely the state where the unattended loop becomes safe to point at them.
 
 The last one is the whole argument. Nobody remembered that trap. The pipeline did.
 

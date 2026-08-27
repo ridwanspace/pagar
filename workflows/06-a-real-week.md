@@ -63,7 +63,10 @@ Covered in full in [`04-monday-morning.md`](04-monday-morning.md), so briefly.
 The drift hook reports nine commits behind. `/sync-main` merges them and flags that migrations
 arrived from both sides on different tables, so no manual ordering is needed. `suggest-next`
 proposes story 2.3, and reading 2.3's prose shows it depends on 2.2 in words the regex could not
-see, so you override it and finish 2.2.
+see, so you override it and finish 2.2. Re-entry context for 2.2's code came back in one
+`graphify query` against the map built back in week one and kept fresh by the update hook —
+the neighborhood of the template resolver, budgeted, no repo re-read
+([`04-monday-morning.md`](04-monday-morning.md), section 5).
 
 `/dev-story` resumes at the first unchecked task. Two tasks left, both already specified in the
 dev story file. Story 2.2 goes to `done` by 15:00.
@@ -452,6 +455,15 @@ response to that week is Friday morning: skip it.
 
 `promotion-audit` and `rca` did not run at all this week. That is normal. They are the
 expensive tools and they earn their place by being rare.
+
+The **story loop** did not run either, and that is worth a sentence. The loop runs
+unattended stories overnight when the backlog is a row of sharp, self-sufficient
+stories and the gates bite — the state at the end of
+[`01-new-feature.md`](01-new-feature.md). This week had one story finished, one parked
+mid-flight by an interruption, and one created Thursday afternoon; there was never a
+backlog to delegate. Pointing the loop at vague or half-cooked stories is how
+confident wrong code ships while you sleep. What that overnight run looks like when
+the preconditions hold: [`07-overnight-run.md`](07-overnight-run.md).
 
 ---
 

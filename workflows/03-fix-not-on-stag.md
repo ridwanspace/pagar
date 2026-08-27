@@ -100,6 +100,14 @@ grep -rn "Could not load invoices" src/
 src/features/invoices/InvoiceList.tsx:64:  setError('Could not load invoices. Please try again.');
 ```
 
+The string is the entry point, not the code path. When the path crosses modules — or
+repos — walking it by grep means re-reading everything between the message and its
+cause. A knowledge graph makes the walk a traversal:
+`graphify path "InvoiceList" "invoiceApi"` returns each hop with its source location,
+budgeted, so step 02 measures a path you can already name. The method lives in
+[`docs/09-graphify.md`](../docs/09-graphify.md); the same verify-before-trust rule
+applies, because an INFERRED edge is a lead, not a fact.
+
 Read the surrounding lines. The client renders that string when `GET /api/invoices` returns
 anything other than 2xx. So the failing path spans both sides, and the watchlist has to too.
 

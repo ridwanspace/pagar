@@ -9,6 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **The six disciplines woven into the workflow scenarios.** Graphify
+  enters where orientation costs context: story file discovery in
+  `01-new-feature`, mechanism location in `02-bug-from-qa` and
+  `03-fix-not-on-stag`, Monday re-entry in `04-monday-morning`, and a
+  full "build the map on day one" section (free local AST build, god
+  nodes, surprising connections) in `05-joining-a-repo`. The story loop
+  enters as the new `workflows/07-overnight-run.md`: preconditions
+  checked honestly, the 17:40 evening sequence (dry-run preflight, one
+  supervised story, launch on a branch), the morning review in order,
+  and the failure taxonomy applied to an overnight failure.
+  `06-a-real-week.md` gained the honest counterpoint: the week that did
+  NOT run the loop, and why that was right. Router updated — decision
+  tree, routing table, chaining diagram, and the helpers section.
 - **The story loop ships**: `starter/scripts/loop/` — the unattended
   create-story → dev-story → code-review → commit runner (one fresh headless
   session per phase, one conventional commit per story), ported from

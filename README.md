@@ -147,6 +147,7 @@ with the gate runner alone.
 | "context costs too much / it re-reads the repo every session" | `docs/09-graphify.md`, `starter/.claude/skills/graphify/SKILL.md` | Build the graph once, then query with a budget |
 | "I use Codex / Kiro / Antigravity / Cursor" | `docs/07-agent-tools.md`, `starter/agent-adapters/README.md` | Use the adapter for their tool, warn them it is mapped and not tested |
 | "show me how this works day to day" | `workflows/README.md` | Route them to the scenario matching their situation |
+| "a backlog of sharp stories and a free night" | `workflows/07-overnight-run.md`, `starter/scripts/loop/README.md` | Check the two preconditions first: sharp stories, believable gates. Dry-run before launch |
 | "a bug just landed on my desk" | `workflows/README.md`, then the scenario it routes to | Run triage first, always, before diagnosing anything |
 | "is this actually worth it" | `workflows/06-a-real-week.md` | Let them read one honest week, do not argue |
 | "give me everything" | `starter/README.md` | Follow its six-step adoption order, do not skip ahead |
@@ -183,6 +184,7 @@ workflows/03-fix-not-on-stag.md       the fix is missing downstream, audit it
 workflows/04-monday-morning.md        picking work back up with no context
 workflows/05-joining-a-repo.md        first week in an unfamiliar codebase
 workflows/06-a-real-week.md           five days, interruptions included
+workflows/07-overnight-run.md         hand sharp stories to the unattended loop
 
 gates/README.md                       the gate runner: install, config, CLI
 gates/gates.config.example.json       a config covering all four stacks

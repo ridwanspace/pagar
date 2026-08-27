@@ -252,6 +252,24 @@ no acceptance criterion restates them:
 You have re-entered the story without re-deriving anything. No re-reading the PRD, no
 reconstructing why the column is nullable, no rediscovering the worker restart. Three minutes.
 
+### The code context you lost, bought back in one query
+
+The dev story names the files — `src/security.py`, `src/services/templates.py` — but not
+their neighborhood: who calls the resolver, what else the authorization check guards,
+which test fixtures already construct an org. That is Monday's real context bill, and
+re-reading files to rebuild it is the expensive way to pay it. If the repo has a
+knowledge graph, the neighborhood is one bounded traversal:
+
+```bash
+graphify query "template resolver: callers, authorization checks, existing fixtures" --budget 1500
+```
+
+Nodes with source locations, the boundary crossings named, nothing more loaded than
+the question needed ([`docs/09-graphify.md`](../docs/09-graphify.md)). Two honest
+caveats: the graph must be fresh — an incremental update hook or the loop's
+epic-boundary re-cluster keeps it honest — and on a repo small enough to hold in your
+head, skip the ceremony and open the files.
+
 ---
 
 ## 6. Check the surface before you touch it

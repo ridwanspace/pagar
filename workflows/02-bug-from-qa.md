@@ -429,6 +429,12 @@ src/api/invoices.py:14:@blp.route("/<int:invoice_id>/export")
 src/api/invoices.py:71:@blp.route("/export-templates")
 ```
 
+(When the symptom string does not hand you the path this cheaply, the same discovery is
+a graph traversal: `graphify path "InvoiceList" "export worker"` names the hops between
+a client symptom and its server cause with source locations, inside a token budget —
+see [`docs/09-graphify.md`](../docs/09-graphify.md). A hint to verify, like every
+heuristic on this page, but a cheap one.)
+
 Both routes exist. Step 03 probes the running system in process, and the probe is where it
 turns:
 

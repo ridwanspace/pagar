@@ -13,7 +13,8 @@ a workflow into a codebase you cannot yet describe.
 
 ```mermaid
 flowchart TB
-    D1["Day 1<br/>Read only.<br/>Agent explores, changes nothing."] --> D2["Day 2<br/>Run every check by hand.<br/>Find out what already fails."]
+    D1["Day 1<br/>Read only.<br/>Agent explores, changes nothing."] --> D1B["Day 1, afternoon<br/>graphify build (free, local AST)<br/>→ the map is ready all week"]
+    D1B --> D2["Day 2<br/>Run every check by hand.<br/>Find out what already fails."]
     D2 --> D3["Day 3<br/>gates.config.json<br/>+ baseline snapshot"]
     D3 --> D4["Day 4<br/>First real change,<br/>gated. Small on purpose."]
     D4 --> D5["Day 5<br/>Write CLAUDE.md<br/>from what surprised you"]
@@ -64,6 +65,34 @@ one you can verify in under a minute.
 
 That list is the repo's confession. It tells you what people gave up on, and it is usually the
 fastest map of where the pain lives.
+
+### Afternoon of day one: build the map
+
+Before the week's questions start, spend one build turning the repo into a navigable
+graph. On a code-only corpus it costs **zero model tokens** — tree-sitter AST
+extraction is deterministic and local, your code never leaves the machine — and it
+changes no application code, so it keeps day one's read-only promise:
+
+```bash
+graphify .            # or: graphify --no-viz . if you only want graph.json + the report
+```
+
+What comes out, in `graphify-out/`:
+
+- **`GRAPH_REPORT.md`** — god nodes (the real architecture as built, not as drawn) and
+  **surprising connections**: edges crossing module boundaries that the directory
+  layout says should not exist. For a new joiner this is the highest-density page in
+  the repo — it is the list of hidden couplings nobody would have told you about.
+- **`graph.json`** — the persistent index. Every question for the rest of the week
+  becomes a bounded traversal instead of a re-read:
+  `graphify query "who writes to the invoices table and through what layer" --budget 1500`.
+
+Keep it fresh cheaply: an incremental `graphify update .` after big pulls (the story
+loop does a full re-cluster at epic boundaries if you adopt it later). The honest
+exception: a repo of twenty files does not need a graph, and building one there is
+ceremony — grep wins below a size you can feel.
+
+Full method, costs, and honesty rules: [`docs/09-graphify.md`](../docs/09-graphify.md).
 
 ---
 
@@ -283,6 +312,8 @@ has caught something real. Let it be judged on that.
 
 - A checkable picture of the codebase, built from answers you verified rather than an essay you
   read.
+- **A navigable map of it** — one free build, god nodes and hidden couplings in a report,
+  every later question a budgeted query instead of a repo tour.
 - A committed baseline that names, precisely, what was already broken before you arrived. This
   is also your alibi.
 - A gate you run before every commit that fails only on breakage you introduced.
