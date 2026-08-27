@@ -20,8 +20,11 @@ The term sits in the agentic-engineering discourse next to *context engineering*
 contrasts the mindsets. The practices in this page are not theory: they were
 distilled from running an unattended story loop (create-story → dev-story → review
 → commit, one fresh agent session per phase) on a production project, incident by
-incident. The working manual ships as a pagar starter skill:
-[`loop-engineering`](../starter/.claude/skills/loop-engineering/SKILL.md).
+incident. The reference implementation ships in the starter kit as
+[`starter/scripts/loop/`](../starter/scripts/loop/README.md) — loop.sh, config.sh,
+per-phase prompts, gates, LEARNINGS.md, and a zero-dependency dry-run guard suite
+(`loop.test.sh`) — with the debug/modify/verify manual as the
+[`loop-engineering`](../starter/.claude/skills/loop-engineering/SKILL.md) skill.
 
 ## The failure taxonomy
 

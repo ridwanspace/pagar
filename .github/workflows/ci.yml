@@ -87,12 +87,25 @@ jobs:
         working-directory: examples/java-spring
         run: node ../../gates/run-gates.mjs
 
+  loop-dry-run:
+    name: story loop dry-run guards
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: loop dry-run test suite
+        run: bash starter/scripts/loop/loop.test.sh
+
   shellcheck:
-    name: shellcheck install.sh
+    name: shellcheck shell scripts
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: install shellcheck
         run: sudo apt-get update && sudo apt-get install -y shellcheck
       - name: shellcheck
-        run: shellcheck install.sh
+        run: >
+          shellcheck install.sh
+          starter/scripts/loop/loop.sh
+          starter/scripts/loop/config.sh
+          starter/scripts/loop/lib/common.sh
+          starter/scripts/loop/loop.test.sh

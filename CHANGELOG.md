@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **The story loop ships**: `starter/scripts/loop/` — the unattended
+  create-story → dev-story → code-review → commit runner (one fresh headless
+  session per phase, one conventional commit per story), ported from
+  production use and generalized: `specs.py` bridge replaces the TypeScript
+  CLI, verification gates auto-detect pagar gates / npm / tsc, the review
+  phase maps to pagar's `code-review` skill, and the commit trailer is
+  opt-in. Includes per-phase prompts (unattended contract, reflect, compact),
+  a starter LEARNINGS.md, and `loop.test.sh` — a zero-dependency dry-run
+  guard suite (29 guards, mutation-verified) that never invokes the agent
+  CLI. CI runs the suite and shellchecks every loop script.
+
 - **Loop engineering** as the fifth principle: `docs/08-loop-engineering.md`
   (the failure taxonomy — phase, gate, honest blocker, wiring — and the eight
   laws of unattended loops), plus a generalized `loop-engineering` starter

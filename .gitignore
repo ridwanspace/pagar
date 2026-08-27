@@ -25,3 +25,7 @@ build/
 
 # graphify build output: derived index, rebuild with `graphify --update`
 graphify-out/
+
+# Story loop: logs are local, LEARNINGS.md is committed on purpose
+starter/scripts/loop/logs/
+starter/scripts/loop/config.local.sh

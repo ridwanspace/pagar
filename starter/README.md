@@ -15,6 +15,9 @@ running. Nothing here needs a network call or a package install.
   hooks/            Deterministic checkpoints, outside the model.
 agent-adapters/     The same method mapped onto Codex, Kiro, Antigravity,
                     and Cursor.
+scripts/loop/       The unattended story loop: create-story → dev-story →
+                    code-review → commit, one fresh session per phase, gates
+                    between phases, dry-run proven. Optional by design.
 ```
 
 ## Install

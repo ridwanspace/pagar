@@ -19,7 +19,9 @@ territory).
 
 The discipline behind this skill is written up in pagar's repo:
 https://github.com/ridwanspace/pagar/blob/main/docs/08-loop-engineering.md —
-this file is the working manual.
+this file is the working manual. The reference implementation ships beside this
+starter as `scripts/loop/` (loop.sh, config.sh, lib/common.sh, prompts/,
+LEARNINGS.md, loop.test.sh).
 
 ## Conventions
 
