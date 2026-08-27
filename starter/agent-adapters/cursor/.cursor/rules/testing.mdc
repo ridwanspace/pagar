@@ -1,0 +1,63 @@
+---
+description: Test discipline. Red first, mutation verification, what to assert, mocking traps.
+globs:
+  - "**/*.test.ts"
+  - "**/*.test.tsx"
+  - "**/*.spec.ts"
+  - "**/test_*.py"
+  - "**/tests/**"
+alwaysApply: false
+---
+
+# Testing
+
+## The one rule everything follows from
+
+**A test that has never been seen to fail is not evidence.**
+
+It is a green check mark, which is a different thing. A test written after the code, passing on
+its first run, tells you nothing about the code. It may assert something that was already true.
+
+Write the assertion, run it, watch it fail for the reason you expect, then make it pass.
+
+## Mutation verification
+
+Before relying on a test, break the code on purpose and watch that test go red.
+
+1. The test passes.
+2. Break the code it is supposed to protect.
+3. Run it. The test must fail.
+4. Read *which* test failed. It must be the one you just wrote.
+5. Restore the code. It passes again.
+
+Step 4 is where the information is, and it is the step people skip. If three tests fail but none is
+yours, your test does not cover what you think it covers. A count of failures is not a signal. The
+identity of the failure is.
+
+If the test stays green while the code is broken, the test is broken.
+
+## What to assert
+
+- Cover the invariant, not the happy path. Bugs live in the cases you did not think about.
+- Absent, present-but-null, and present-but-empty are three different states.
+- Assert on values, not just that a call happened. "It was called" passes when it was called with
+  completely wrong arguments.
+- A negative assertion needs a positive control. Before trusting "X did not change", write the case
+  where X does change and watch that assertion fire.
+
+## Mocking traps
+
+- Patch a name where it is looked up, not where it is defined. A from-import copies the reference.
+  The inverse trap: an import inside a function body means you must patch the definition site.
+- A mock accepts any signature. Renaming a parameter is invisible to every call site that mocks it.
+- Prefer a small hand-written fake over a permissive mock. A permissive mock auto-creates every
+  attribute, so a typo passes silently.
+
+## Done means
+
+- [ ] Tests exist for the new behavior.
+- [ ] You watched them fail before they passed.
+- [ ] The scoped suite passes and you have the output.
+- [ ] Linter and type checker pass.
+
+Never mark work done on a test you have not run.

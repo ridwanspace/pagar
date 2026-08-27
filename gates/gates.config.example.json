@@ -1,0 +1,145 @@
+{
+  "$schema": "./gates.schema.json",
+  "_comment": "Example config covering all four stacks. Copy to gates.config.json at your repo root and delete the projects you do not have. JSON has no comments, so notes live in _comment and description fields, which the runner reads and ignores.",
+
+  "baselineDir": ".gates/baselines",
+  "_comment_baselineDir": "Commit this directory. A baseline is a reviewed record of known debt, so it belongs in git where a growing one shows up in a diff.",
+
+  "defaultTimeoutMs": 600000,
+  "_comment_timeout": "10 minutes. Any single gate that needs more than that is not a local gate, it is a CI job.",
+
+  "_comment_order": "Gates run in the order they are listed. Put them cheapest first: format, lint, type-check, unit tests, build. The first failure you hit should be the one that took 2 seconds to find.",
+
+  "projects": [
+    {
+      "_comment": "Python backend. Flask, pytest, ruff.",
+      "name": "backend",
+      "cwd": "backend",
+      "paths": ["backend"],
+      "_comment_paths": "--only-changed skips this whole project when git reports no change under backend/.",
+      "gates": [
+        {
+          "id": "format",
+          "description": "ruff format check",
+          "run": "ruff format --check .",
+          "parser": "exit-code",
+          "_comment": "exit-code produces no failure keys, so it cannot be baselined. Formatting is all-or-nothing anyway: run the formatter and the gate goes green.",
+          "timeoutMs": 60000
+        },
+        {
+          "id": "lint",
+          "description": "ruff lint",
+          "run": "ruff check --output-format concise .",
+          "parser": "exit-code",
+          "_comment": "Swap to a keyed parser if you want ruff baselined. exit-code here assumes you start from a clean lint.",
+          "timeoutMs": 120000
+        },
+        {
+          "id": "pytest",
+          "description": "unit tests",
+          "run": "python -m pytest tests -q -rfE --no-header -p no:cacheprovider",
+          "parser": "pytest",
+          "_comment_run": "-rfE prints the short summary lines FAILED path::test and ERROR path::test. That is where the keys come from, and it needs no plugin. -p no:cacheprovider keeps .pytest_cache out of the tree.",
+          "baseline": true,
+          "env": { "PYTHONPATH": ".", "SKIP_DB_BOOTSTRAP": "1" },
+          "_comment_env": "SKIP_DB_BOOTSTRAP keeps the gate hermetic. A gate must not need a live database.",
+          "timeoutMs": 300000
+        }
+      ]
+    },
+
+    {
+      "_comment": "TypeScript frontend. Vite, vitest, eslint.",
+      "name": "frontend",
+      "cwd": "frontend",
+      "paths": ["frontend"],
+      "gates": [
+        {
+          "id": "eslint",
+          "description": "eslint, errors and warnings",
+          "run": "eslint . --format json",
+          "parser": "eslint",
+          "_comment": "Keys are file plus rule id. Line and column are dropped on purpose, so moving code does not invent NEW failures.",
+          "baseline": true,
+          "allowedExitCodes": [0, 1],
+          "timeoutMs": 180000
+        },
+        {
+          "id": "typecheck",
+          "description": "tsc over src AND tests",
+          "run": "tsc -p tsconfig.gates.json --noEmit",
+          "parser": "tsc",
+          "_comment": "THE HOLE WORTH CLOSING. Most tsconfig.json files exclude test files, so `tsc --noEmit` never checks them and a broken test helper type stays invisible. tsconfig.gates.json extends tsconfig.json and adds the test globs back into include. Point this gate at that file, not at the default one.",
+          "baseline": true,
+          "allowedExitCodes": [0, 1, 2],
+          "timeoutMs": 180000
+        },
+        {
+          "id": "vitest",
+          "description": "unit tests",
+          "run": "vitest run --passWithNoTests --reporter=json --outputFile=.gates-vitest.json",
+          "parser": "vitest",
+          "reportFile": ".gates-vitest.json",
+          "_comment_reportFile": "vitest prints progress on the same stream as the report, so write the JSON to a file and read it back. Add .gates-vitest.json to .gitignore.",
+          "baseline": true,
+          "allowedExitCodes": [0, 1],
+          "timeoutMs": 300000
+        },
+        {
+          "id": "build",
+          "description": "production build",
+          "run": "npm run build",
+          "parser": "exit-code",
+          "_comment": "Last in the ladder because it is the slowest. A build failure the type-check did not catch is rare, but it is the one that breaks the deploy.",
+          "timeoutMs": 420000
+        }
+      ]
+    },
+
+    {
+      "_comment": "Go service.",
+      "name": "api-go",
+      "cwd": "services/api",
+      "paths": ["services/api"],
+      "gates": [
+        {
+          "id": "vet",
+          "description": "go vet",
+          "run": "go vet ./...",
+          "parser": "exit-code",
+          "timeoutMs": 120000
+        },
+        {
+          "id": "gotest",
+          "description": "go test",
+          "run": "go test -json ./...",
+          "parser": "go-test",
+          "_comment_run": "-json is required. The parser reads the event stream and keys failures as Package.TestName, subtests included.",
+          "baseline": true,
+          "allowedExitCodes": [0, 1],
+          "timeoutMs": 300000
+        }
+      ]
+    },
+
+    {
+      "_comment": "Java service. Maven surefire writes JUnit XML, which is what the parser reads.",
+      "name": "billing-java",
+      "cwd": "services/billing",
+      "paths": ["services/billing"],
+      "gates": [
+        {
+          "id": "surefire",
+          "description": "mvn test",
+          "run": "mvn -q -B test",
+          "parser": "junit-xml",
+          "reportFile": "target/surefire-reports",
+          "_comment_reportFile": "A directory is walked for every .xml inside it. A single file path also works. Gradle writes to build/test-results/test.",
+          "baseline": true,
+          "allowedExitCodes": [0, 1],
+          "timeoutMs": 600000
+        }
+      ]
+    }
+  ]
+}

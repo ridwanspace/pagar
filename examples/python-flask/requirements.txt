@@ -1,0 +1,5 @@
+# Pinned. An unpinned example drifts and then nobody can reproduce the run in
+# the README.
+Flask==3.1.0
+pytest==8.3.4
+ruff==0.8.6

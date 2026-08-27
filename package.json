@@ -1,0 +1,45 @@
+{
+  "name": "pagar-gates",
+  "version": "0.1.0",
+  "description": "pagar — a baseline-aware gate runner and spec-driven method for agentic engineering. The sensor half of a coding-agent harness, with zero runtime dependencies.",
+  "type": "module",
+  "license": "MIT",
+  "homepage": "https://github.com/ridwanspace/pagar#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ridwanspace/pagar.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ridwanspace/pagar/issues"
+  },
+  "bin": {
+    "pagar": "gates/run-gates.mjs"
+  },
+  "files": [
+    "gates/",
+    "install.sh",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node gates/test/run-tests.mjs",
+    "gates": "node gates/run-gates.mjs"
+  },
+  "keywords": [
+    "gate-runner",
+    "baseline",
+    "known-failures",
+    "ratchet",
+    "ci",
+    "local-ci",
+    "ai-agents",
+    "coding-agents",
+    "spec-driven-development",
+    "tdd",
+    "zero-dependencies"
+  ]
+}

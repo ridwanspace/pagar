@@ -1,0 +1,13 @@
+============================= test session starts ==============================
+collected 214 items
+
+tests/test_auth.py ..F...                                               [ 10%]
+tests/test_meeting.py .....F..                                          [ 45%]
+tests/test_export.py ...E..                                             [ 78%]
+tests/test_billing.py ......                                            [100%]
+
+=========================== short test summary info ============================
+FAILED tests/test_auth.py::test_login_rejects_expired_token - assert 200 == 401
+FAILED tests/test_meeting.py::TestMeetingList::test_pagination_caps_page_size - AssertionError: assert 500 == 100
+ERROR tests/test_export.py::test_docx_builder_writes_header - fixture 'tmp_docx' not found
+=================== 2 failed, 1 error, 211 passed in 42.31s ====================

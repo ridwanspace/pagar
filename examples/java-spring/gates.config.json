@@ -1,0 +1,28 @@
+{
+  "_comment": "Gate config for the polyglot runner at ../../gates/. Run: node ../../gates/run-gates.mjs. NOTE: these commands are written but UNVERIFIED. Maven is not installed on the machine this example was authored on, so no gate here has ever been executed. See README.md, section \"What was actually run\".",
+  "baselineDir": ".gates/baselines",
+  "projects": [
+    {
+      "name": "notes-api",
+      "cwd": ".",
+      "paths": ["src", "pom.xml"],
+      "gates": [
+        {
+          "id": "compile",
+          "description": "javac via maven, main and test sources",
+          "run": "mvn -q -B test-compile",
+          "parser": "exit-code"
+        },
+        {
+          "id": "test",
+          "description": "JUnit 5 through surefire",
+          "_comment": "The junit-xml parser reads the XML surefire writes, not stdout, so reportFile is required and points at the surefire output directory. -Dmaven.test.failure.ignore=true lets the build exit 0 so the parser can read the reports and let the BASELINE decide what counts as a failure. Without it maven aborts and writes partial reports.",
+          "run": "mvn -q -B test -Dmaven.test.failure.ignore=true",
+          "parser": "junit-xml",
+          "reportFile": "target/surefire-reports",
+          "baseline": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{"Time":"2026-08-26T10:00:00.1Z","Action":"run","Package":"example.com/app/auth","Test":"TestLoginRejectsExpiredToken"}
+{"Time":"2026-08-26T10:00:00.2Z","Action":"output","Package":"example.com/app/auth","Test":"TestLoginRejectsExpiredToken","Output":"    auth_test.go:41: want 401, got 200\n"}
+{"Time":"2026-08-26T10:00:00.3Z","Action":"fail","Package":"example.com/app/auth","Test":"TestLoginRejectsExpiredToken","Elapsed":0.01}
+{"Time":"2026-08-26T10:00:00.4Z","Action":"run","Package":"example.com/app/meeting","Test":"TestPagination"}
+{"Time":"2026-08-26T10:00:00.5Z","Action":"run","Package":"example.com/app/meeting","Test":"TestPagination/caps_page_size"}
+{"Time":"2026-08-26T10:00:00.6Z","Action":"fail","Package":"example.com/app/meeting","Test":"TestPagination/caps_page_size","Elapsed":0.02}
+{"Time":"2026-08-26T10:00:00.7Z","Action":"fail","Package":"example.com/app/meeting","Test":"TestPagination","Elapsed":0.03}
+{"Time":"2026-08-26T10:00:00.8Z","Action":"pass","Package":"example.com/app/billing","Test":"TestInvoiceTotal","Elapsed":0.00}
+{"Time":"2026-08-26T10:00:00.9Z","Action":"pass","Package":"example.com/app/billing","Elapsed":0.01}
+{"Time":"2026-08-26T10:00:01.0Z","Action":"fail","Package":"example.com/app/auth","Elapsed":0.05}
+{"Time":"2026-08-26T10:00:01.1Z","Action":"fail","Package":"example.com/app/meeting","Elapsed":0.06}
+{"Time":"2026-08-26T10:00:01.2Z","Action":"fail","Package":"example.com/app/broken","Elapsed":0.00}

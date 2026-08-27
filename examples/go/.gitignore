@@ -1,0 +1,6 @@
+# Compiled binaries
+/api
+*.exe
+*.test
+*.out
+.gates/

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <!--
+    spring-boot-starter-parent supplies the dependency versions and the surefire
+    configuration. Pinning it rather than inheriting a range keeps the build
+    reproducible, which is the same reason requirements.txt is pinned in the
+    python-flask example next door.
+  -->
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>3.4.1</version>
+    <relativePath/>
+  </parent>
+
+  <groupId>com.example</groupId>
+  <artifactId>notes</artifactId>
+  <version>0.1.0</version>
+  <name>notes</name>
+  <description>Meeting notes example for the AI-assisted engineering workflow</description>
+
+  <properties>
+    <java.version>21</java.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
+    <!--
+      spring-boot-starter-test brings JUnit 5, AssertJ, Hamcrest, Mockito and
+      spring-test in one coordinate. The tests use JUnit 5 and AssertJ only.
+    -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <!--
+            The gate runner's junit-xml parser reads target/surefire-reports.
+            Surefire writes that XML by default, so no extra config is needed.
+            testFailureIgnore stays FALSE: the gate decides what a failure means
+            by diffing against a baseline, and it can only do that if the build
+            reports the failure honestly in the first place.
+          -->
+          <testFailureIgnore>false</testFailureIgnore>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

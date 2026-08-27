@@ -1,0 +1,28 @@
+{
+  "numTotalTestSuites": 3,
+  "numFailedTests": 3,
+  "success": false,
+  "testResults": [
+    {
+      "name": "/home/dev/app/frontend/src/__tests__/MeetingPage.test.tsx",
+      "status": "failed",
+      "assertionResults": [
+        { "fullName": "MeetingPage > renders the summary", "title": "renders the summary", "status": "failed" },
+        { "fullName": "MeetingPage > shows an empty state", "title": "shows an empty state", "status": "passed" },
+        { "fullName": "MeetingPage > paginates at 100 rows", "title": "paginates at 100 rows", "status": "failed" }
+      ]
+    },
+    {
+      "name": "/home/dev/app/frontend/src/hooks/useMeeting.test.ts",
+      "status": "failed",
+      "assertionResults": []
+    },
+    {
+      "name": "/home/dev/app/frontend/src/utils/format.test.ts",
+      "status": "passed",
+      "assertionResults": [
+        { "fullName": "format > formats a duration", "title": "formats a duration", "status": "passed" }
+      ]
+    }
+  ]
+}

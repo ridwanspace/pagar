@@ -1,0 +1,14 @@
+[tool.pytest.ini_options]
+# rootdir-relative import so `from app.notes import ...` works without an
+# installed package and without a sys.path hack in conftest.py.
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+
+[tool.ruff.lint]
+# E,F are the pyflakes/pycodestyle core. I is import sorting. Keep the set small
+# so the gate stays a signal rather than a style argument.
+select = ["E", "F", "I", "B", "UP"]

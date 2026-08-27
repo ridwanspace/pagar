@@ -1,0 +1,5 @@
+{
+  "// why": "Solution-style root config. It holds no files of its own, it only points at the two real configs. `tsc -b` builds both.",
+  "files": [],
+  "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.tests.json" }]
+}

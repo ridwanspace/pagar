@@ -1,0 +1,120 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/ridwanspace/pagar/main/gates/gates.schema.json",
+  "title": "gates config",
+  "description": "Config for the baseline-aware local gate runner. Point your editor at this file with \"$schema\": \"./gates/gates.schema.json\" to get completion and validation while you type.",
+  "type": "object",
+  "required": ["projects"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Path to this schema file, relative to the config."
+    },
+    "_comment": {
+      "type": "string",
+      "description": "JSON has no comments. Any key starting with an underscore is ignored, so use it for notes."
+    },
+    "baselineDir": {
+      "type": "string",
+      "default": ".gates/baselines",
+      "description": "Where baselines are stored, relative to the config file. Layout is <baselineDir>/<project>/<gate>.txt. Commit this directory."
+    },
+    "defaultTimeoutMs": {
+      "type": "integer",
+      "exclusiveMinimum": 0,
+      "default": 600000,
+      "description": "Default per-gate timeout in milliseconds. A gate that needs more than a few minutes belongs in CI, not in a local gate."
+    },
+    "projects": {
+      "type": "array",
+      "minItems": 1,
+      "description": "One entry per buildable unit. In a monorepo that is usually one per top-level directory.",
+      "items": { "$ref": "#/definitions/project" }
+    }
+  },
+  "definitions": {
+    "project": {
+      "type": "object",
+      "required": ["name", "gates"],
+      "additionalProperties": false,
+      "properties": {
+        "_comment": { "type": "string" },
+        "name": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._-]+$",
+          "description": "Project name. Becomes a directory name under baselineDir, and the value for --project."
+        },
+        "cwd": {
+          "type": "string",
+          "default": ".",
+          "description": "Directory the gate commands run in, relative to the config file."
+        },
+        "paths": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Repo-relative path prefixes that belong to this project. --only-changed skips the project when git reports no change under any of them. Defaults to [cwd]."
+        },
+        "gates": {
+          "type": "array",
+          "minItems": 1,
+          "description": "Gates in ladder order: cheapest and fastest first, so the common failure surfaces in seconds.",
+          "items": { "$ref": "#/definitions/gate" }
+        }
+      }
+    },
+    "gate": {
+      "type": "object",
+      "required": ["id", "run", "parser"],
+      "additionalProperties": false,
+      "properties": {
+        "_comment": { "type": "string" },
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._-]+$",
+          "description": "Gate id, unique inside its project. Becomes the baseline file name, and the value for --gate."
+        },
+        "description": {
+          "type": "string",
+          "description": "One short line shown next to the gate in the report."
+        },
+        "run": {
+          "type": "string",
+          "description": "The shell command. It runs through a shell, so pipes, quotes and VAR=value prefixes all work. node_modules/.bin of the gate cwd is prepended to PATH."
+        },
+        "parser": {
+          "type": "string",
+          "enum": ["pytest", "vitest", "tsc", "eslint", "go-test", "junit-xml", "exit-code"],
+          "description": "How to turn output into stable failure keys. Use exit-code for any tool with no machine-readable output; it produces no keys, so it cannot be baselined."
+        },
+        "baseline": {
+          "type": "boolean",
+          "description": "Compare against a recorded baseline and fail only on NEW failures. Defaults to true for every parser except exit-code. Set false to make any failure fatal."
+        },
+        "env": {
+          "type": "object",
+          "additionalProperties": { "type": "string" },
+          "description": "Extra environment variables for this gate only."
+        },
+        "timeoutMs": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "description": "Per-gate timeout override, in milliseconds."
+        },
+        "cwd": {
+          "type": "string",
+          "description": "Override the project cwd for this one gate. Relative to the config file."
+        },
+        "reportFile": {
+          "type": "string",
+          "description": "Read the parser input from this file instead of stdout. Required for junit-xml, where it may be a single XML file or a directory to walk. Useful for vitest and eslint when the command writes to --outputFile."
+        },
+        "allowedExitCodes": {
+          "type": "array",
+          "items": { "type": "integer" },
+          "description": "Exit codes that mean the tool ran normally. Default is [0]. A test runner that exits 1 on failures still ran normally, so add 1 there when the runner would otherwise be treated as crashed."
+        }
+      }
+    }
+  }
+}

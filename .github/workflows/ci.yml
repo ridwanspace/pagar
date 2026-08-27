@@ -1,0 +1,98 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  selftest:
+    name: self-tests (Node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [20, 22, 24]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - name: gate runner test suite
+        run: node gates/test/run-tests.mjs
+
+  dogfood:
+    name: pagar gates itself
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: run the repo's own gates
+        run: node gates/run-gates.mjs
+
+  example-python:
+    name: example: python-flask
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: install example deps
+        working-directory: examples/python-flask
+        run: pip install -r requirements.txt
+      - name: gates
+        working-directory: examples/python-flask
+        run: node ../../gates/run-gates.mjs
+
+  example-node:
+    name: example: node-react
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: install example deps
+        working-directory: examples/node-react
+        run: npm ci
+      - name: gates
+        working-directory: examples/node-react
+        run: node ../../gates/run-gates.mjs
+
+  example-go:
+    name: example: go
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: stable
+      - name: gates
+        working-directory: examples/go
+        run: node ../../gates/run-gates.mjs
+
+  example-java:
+    name: example: java-spring
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+      - name: gates
+        working-directory: examples/java-spring
+        run: node ../../gates/run-gates.mjs
+
+  shellcheck:
+    name: shellcheck install.sh
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: install shellcheck
+        run: sudo apt-get update && sudo apt-get install -y shellcheck
+      - name: shellcheck
+        run: shellcheck install.sh

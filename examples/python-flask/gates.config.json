@@ -1,0 +1,33 @@
+{
+  "_comment": "Gate config for the polyglot runner at ../../gates/. Run: node ../../gates/run-gates.mjs",
+  "baselineDir": ".gates/baselines",
+  "projects": [
+    {
+      "name": "notes-api",
+      "cwd": ".",
+      "paths": ["app", "tests"],
+      "gates": [
+        {
+          "id": "lint",
+          "description": "ruff lint, the whole example",
+          "run": "ruff check . --output-format=concise",
+          "parser": "exit-code"
+        },
+        {
+          "id": "format",
+          "description": "ruff format, check only, never writes",
+          "run": "ruff format --check .",
+          "parser": "exit-code"
+        },
+        {
+          "id": "test",
+          "description": "pytest unit and API tests",
+          "_comment": "-rfE is what the pytest parser reads. Without it there is no FAILED summary line and every run looks green.",
+          "run": "python -m pytest -q -rfE",
+          "parser": "pytest",
+          "baseline": true
+        }
+      ]
+    }
+  ]
+}

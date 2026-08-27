@@ -1,0 +1,25 @@
+{
+  "// why": "Shared compiler options. Both the app config and the test config extend this, so the two type-checks cannot drift apart in strictness.",
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "types": [],
+
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": false,
+    "exactOptionalPropertyTypes": false,
+
+    "isolatedModules": true,
+    "verbatimModuleSyntax": false,
+    "allowImportingTsExtensions": false,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "noEmit": true
+  }
+}

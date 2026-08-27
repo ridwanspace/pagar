@@ -1,0 +1,20 @@
+{
+  "_comment": "pagar, gated by pagar. Run: node gates/run-gates.mjs",
+  "baselineDir": ".gates/baselines",
+  "projects": [
+    {
+      "name": "pagar",
+      "cwd": ".",
+      "paths": ["gates", "docs", "workflows", "starter", "examples"],
+      "gates": [
+        {
+          "id": "self-test",
+          "description": "the gate runner's own test suite",
+          "run": "node gates/test/run-tests.mjs",
+          "parser": "exit-code",
+          "baseline": false
+        }
+      ]
+    }
+  ]
+}

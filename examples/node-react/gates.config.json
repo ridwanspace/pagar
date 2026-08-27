@@ -1,0 +1,44 @@
+{
+  "_comment": "Gate config for the polyglot runner at ../../gates/. Run: node ../../gates/run-gates.mjs",
+  "baselineDir": ".gates/baselines",
+  "projects": [
+    {
+      "name": "notes-ui",
+      "cwd": ".",
+      "paths": ["src", "package.json", "tsconfig.app.json", "tsconfig.tests.json"],
+      "gates": [
+        {
+          "id": "type-check",
+          "description": "tsc on application sources",
+          "run": "tsc --noEmit -p tsconfig.app.json",
+          "parser": "tsc",
+          "baseline": true
+        },
+        {
+          "id": "type-check-tests",
+          "description": "tsc on test files, which tsconfig.app.json excludes",
+          "_comment": "THE HOLE FIX. Without this gate a type error inside a test file ships silently: the app config excludes tests, and vitest transpiles without type-checking. Deleting this gate is how the hole comes back.",
+          "run": "tsc --noEmit -p tsconfig.tests.json",
+          "parser": "tsc",
+          "baseline": true
+        },
+        {
+          "id": "lint",
+          "description": "eslint, warnings count as failures",
+          "_comment": "--format json is what the eslint parser reads. Plain stylish output parses to nothing and the gate reports itself broken.",
+          "run": "eslint . --max-warnings 0 --format json",
+          "parser": "eslint",
+          "baseline": true
+        },
+        {
+          "id": "test",
+          "description": "vitest unit and component tests",
+          "_comment": "--reporter=json is what the vitest parser reads.",
+          "run": "vitest run --reporter=json",
+          "parser": "vitest",
+          "baseline": true
+        }
+      ]
+    }
+  ]
+}

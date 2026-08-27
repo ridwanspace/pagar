@@ -1,0 +1,9 @@
+{
+  "// why": "THE TYPE-CHECK HOLE FIX. tsconfig.app.json excludes test files, so `tsc --noEmit` on it alone never type-checks a single test. A test could call a function with the wrong arguments and tsc would stay silent, because vitest transpiles per file and does not type-check either. This config includes the tests and adds the vitest and jest-dom globals they need.",
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "types": ["vitest/globals", "@testing-library/jest-dom"],
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.tests.tsbuildinfo"
+  },
+  "include": ["src", "vite.config.ts", "vitest.setup.ts", "eslint.config.js"]
+}

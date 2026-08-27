@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+target/
+
+# Build output
+dist/
+build/
+*.egg-info/
+
+# Gate state: baselines are committed on purpose, caches are not
+.gates/cache/
+
+# Local agent settings that carry machine paths or credentials
+.claude/settings.local.json
+**/settings.local.json
+
+# Editor and OS
+.DS_Store
+.idea/
+*.swp

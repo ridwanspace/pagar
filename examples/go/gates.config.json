@@ -1,0 +1,33 @@
+{
+  "_comment": "Gate config for the polyglot runner at ../../gates/. Run: node ../../gates/run-gates.mjs",
+  "baselineDir": ".gates/baselines",
+  "projects": [
+    {
+      "name": "notes-api",
+      "cwd": ".",
+      "paths": ["cmd", "internal"],
+      "gates": [
+        {
+          "id": "vet",
+          "description": "go vet, the compiler's own lint",
+          "run": "go vet ./...",
+          "parser": "exit-code"
+        },
+        {
+          "id": "fmt",
+          "description": "gofmt -l prints unformatted files and still exits 0, so the check inverts it",
+          "run": "test -z \"$(gofmt -l .)\"",
+          "parser": "exit-code"
+        },
+        {
+          "id": "test",
+          "description": "go test with the race detector",
+          "_comment": "-json is what the go-test parser reads. Without it the parser sees no events and reports a broken gate rather than a green run.",
+          "run": "go test -json -race ./...",
+          "parser": "go-test",
+          "baseline": true
+        }
+      ]
+    }
+  ]
+}

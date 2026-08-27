@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.billing.InvoiceServiceTest" tests="4" failures="1" errors="1" skipped="1" time="1.204">
+  <testcase name="totalsIncludeTax" classname="com.example.billing.InvoiceServiceTest" time="0.101"/>
+  <testcase name="rejectsNegativeAmount" classname="com.example.billing.InvoiceServiceTest" time="0.042">
+    <failure message="expected:&lt;400&gt; but was:&lt;200&gt;" type="java.lang.AssertionError">java.lang.AssertionError</failure>
+  </testcase>
+  <testcase name="loadsCurrencyTable" classname="com.example.billing.InvoiceServiceTest" time="0.010">
+    <error message="NullPointerException" type="java.lang.NullPointerException">stack trace here</error>
+  </testcase>
+  <testcase name="handlesRounding" classname="com.example.billing.InvoiceServiceTest" time="0.000">
+    <skipped/>
+  </testcase>
+</testsuite>

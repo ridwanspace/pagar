@@ -1,0 +1,9 @@
+{
+  "// why": "Application sources only. Test files are excluded here because they pull in vitest globals that the shipped bundle must not depend on. That exclusion is exactly what creates the hole tsconfig.tests.json closes.",
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo"
+  },
+  "include": ["src"],
+  "exclude": ["src/**/*.test.ts", "src/**/*.test.tsx", "src/__tests__"]
+}

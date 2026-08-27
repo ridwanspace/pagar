@@ -1,0 +1,26 @@
+[
+  {
+    "filePath": "/home/dev/app/frontend/src/pages/MeetingPage.tsx",
+    "messages": [
+      { "ruleId": "no-console", "severity": 2, "message": "Unexpected console statement.", "line": 31, "column": 5 },
+      { "ruleId": "no-console", "severity": 2, "message": "Unexpected console statement.", "line": 88, "column": 5 },
+      { "ruleId": "@typescript-eslint/no-explicit-any", "severity": 2, "message": "Unexpected any.", "line": 12, "column": 20 }
+    ],
+    "errorCount": 3,
+    "warningCount": 0
+  },
+  {
+    "filePath": "/home/dev/app/frontend/src/hooks/useMeeting.ts",
+    "messages": [
+      { "ruleId": "react-hooks/exhaustive-deps", "severity": 1, "message": "Missing dependency.", "line": 44, "column": 6 }
+    ],
+    "errorCount": 0,
+    "warningCount": 1
+  },
+  {
+    "filePath": "/home/dev/app/frontend/src/utils/format.ts",
+    "messages": [],
+    "errorCount": 0,
+    "warningCount": 0
+  }
+]

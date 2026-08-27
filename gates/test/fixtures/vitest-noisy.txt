@@ -1,0 +1,4 @@
+stderr | src/hooks/useMeeting.test.ts
+Warning: an update was not wrapped in act(...)
+
+{"numTotalTestSuites":1,"success":true,"testResults":[{"name":"/home/dev/app/frontend/src/utils/format.test.ts","status":"passed","assertionResults":[{"fullName":"format > formats a duration","title":"formats a duration","status":"passed"}]}]}
