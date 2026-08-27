@@ -19,6 +19,9 @@ Ignore the rest.
 | [05-local-ci-enforcement.md](05-local-ci-enforcement.md) | The gate runner's method: gates, the ladder, the baseline pattern. |
 | [06-further-reading.md](06-further-reading.md) | Books, papers, and official tool docs, grouped by topic. |
 | [07-agent-tools.md](07-agent-tools.md) | Claude Code, Codex, Kiro, Antigravity, Cursor: what maps to what. |
+| [08-loop-engineering.md](08-loop-engineering.md) | Running agent loops unattended: the failure taxonomy and the laws that keep them honest. |
+| [09-graphify.md](09-graphify.md) | Token optimization via navigation: index the repo once, pay context for the question, not the corpus. |
+| [10-six-principles-one-workflow.md](10-six-principles-one-workflow.md) | The whole fence, assembled: how the six principles compose into one loop. |
 
 ## Read these in order if you are new
 
@@ -29,7 +32,9 @@ Then read [02-spec-driven-development.md](02-spec-driven-development.md) and
 need before the loops make sense. Then
 [04-compound-engineering.md](04-compound-engineering.md), which is the part
 worth your time. [05-local-ci-enforcement.md](05-local-ci-enforcement.md)
-pays off the same day you apply it.
+pays off the same day you apply it. When the basics hold, [08](08-loop-engineering.md)
+and [09](09-graphify.md) extend the method to unattended loops and cheap context,
+and [10](10-six-principles-one-workflow.md) assembles the whole fence.
 
 ## A note on scope
 

@@ -9,6 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Loop engineering** as the fifth principle: `docs/08-loop-engineering.md`
+  (the failure taxonomy — phase, gate, honest blocker, wiring — and the eight
+  laws of unattended loops), plus a generalized `loop-engineering` starter
+  skill (diagnose / modify / verify step files).
+- **Graphify** as the sixth principle: `docs/09-graphify.md` — token
+  optimization via navigation; index the repo once (free local AST extraction,
+  cached semantic extraction), then query with a budget instead of re-reading
+  the corpus. Ships an operating-manual starter skill for the open-source
+  graphify tool (PyPI `graphifyy`, Graphify-Labs).
+- `docs/10-six-principles-one-workflow.md`: how the six compose into one loop,
+  what each catches that the others cannot, and the adoption ladder.
+- README expanded to the six principles with credits for both new ones;
+  `graphify-out/` gitignored as a derived artifact.
 - "Credit where due" section in the README under the four ideas, attributing
   each to its origin: spec-driven development to spec-kit and the BMAD method,
   TDD to Kent Beck plus the mutation-testing tools, compound engineering to

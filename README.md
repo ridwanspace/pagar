@@ -17,9 +17,11 @@ with.
   seconds, before the commit. It snapshots your already-failing tests into a
   **baseline**, then fails **only on failures that are new**. That single
   idea is what lets a gate survive contact with a repo that already has debt.
-- **A spec-driven method** (`docs/`, `workflows/`): PRD to epics to stories,
-  tests that have been *seen to fail*, lessons that compound. Stack-neutral,
-  written down, readable in an evening.
+- **A spec-driven method** (`docs/`, `workflows/`): six disciplines — PRD to epics
+  to stories, tests that have been *seen to fail*, lessons that compound, loops
+  that run unattended honestly, and a navigable code graph so context costs scale
+  with the question, not the repository. Stack-neutral, written down, readable in
+  an evening.
 - **The sensor half, on purpose.** A harness needs an actuator (your agent —
   any of them), sensors (pagar), and memory (specs, baselines, lessons as
   plain files). pagar is only the sensors and the memory format. Swap agents
@@ -140,6 +142,9 @@ with the gate runner alone.
 | "my tests keep passing when the code is broken" | `docs/03-tdd-with-agents.md` | Teach the mutation-verify loop, apply it to one real test |
 | "I keep re-explaining the same things" | `docs/04-compound-engineering.md` | Set up `CLAUDE.md`, then rules, then lesson mining |
 | "set up local CI" | `docs/05-local-ci-enforcement.md`, `gates/README.md` | Build the gate ladder for their stack |
+| "I want the agent to run stories unattended" | `docs/08-loop-engineering.md`, `starter/.claude/skills/loop-engineering/SKILL.md` | Teach the loop laws first; a loop over vague stories is a printer of confident wrong code |
+| "my agent loop failed / stopped / lied" | `docs/08-loop-engineering.md`, then the skill's step-01 | Diagnose by failure class: phase, gate, blocker, or wiring |
+| "context costs too much / it re-reads the repo every session" | `docs/09-graphify.md`, `starter/.claude/skills/graphify/SKILL.md` | Build the graph once, then query with a budget |
 | "I use Codex / Kiro / Antigravity / Cursor" | `docs/07-agent-tools.md`, `starter/agent-adapters/README.md` | Use the adapter for their tool, warn them it is mapped and not tested |
 | "show me how this works day to day" | `workflows/README.md` | Route them to the scenario matching their situation |
 | "a bug just landed on my desk" | `workflows/README.md`, then the scenario it routes to | Run triage first, always, before diagnosing anything |
@@ -167,6 +172,9 @@ docs/04-compound-engineering.md       the two loops that make work cheaper
 docs/05-local-ci-enforcement.md       gates, the ladder, the baseline pattern
 docs/06-further-reading.md            books and papers, outside this repo
 docs/07-agent-tools.md                Claude Code, Codex, Kiro, Antigravity, Cursor
+docs/08-loop-engineering.md           unattended agent loops: taxonomy and laws
+docs/09-graphify.md                   token optimization via navigation
+docs/10-six-principles-one-workflow.md the whole fence, assembled
 
 workflows/README.md                   which skill for what just landed on you
 workflows/01-new-feature.md           the full pipeline, spec to shipped
@@ -184,7 +192,8 @@ starter/README.md                     the adoption order, read before installing
 starter/.claude/CLAUDE.md             project context template, has the
                                       placeholder fill-in table
 starter/.claude/rules/                scoped knowledge, 11 files
-starter/.claude/skills/               named procedures, 11 skills, step files
+starter/.claude/skills/               named procedures, 13 skills, step files
+                                      incl. loop-engineering and graphify
 starter/.claude/scripts/specs/        the spec pipeline CLI and its README
 starter/.claude/hooks/                session-start and stop hooks
 starter/agent-adapters/               Codex, Kiro, Antigravity, Cursor
@@ -320,7 +329,7 @@ fiction. A baseline that grows every time it goes red is not a gate any more.
 Every piece in this repo is built to be cheap enough to actually run, and
 where a piece is not carrying its weight, delete it.
 
-### Why the four pieces together, and not just one
+### Why the six principles together, and not just one
 
 Each one covers a specific way an agent fails, and each leaves a gap the next
 one fills:
@@ -334,13 +343,21 @@ one fills:
   trap.
 - **Compound engineering** fixes *paying full price twice*. It needs the other
   three to have anything worth recording.
+- **Loop engineering** fixes *the unattended run quietly going wrong* — the
+  confident COMPLETE over a red suite, the flag in the code that `--help` never
+  heard of.
+- **Graphify** fixes *the context bill* — the biggest recurring cost of agentic
+  work — and catches the architectural lies: hidden cross-boundary edges, god
+  nodes the diagram forgot.
 
-Take one and you get part of the benefit. Take gates alone and you still catch
-most of the bad days, which is why we recommend starting there.
+Take the first four and you have a disciplined attended workflow. Add the fifth
+and it runs at machine speed. Add the sixth and it scales past the context
+window. [`docs/10-six-principles-one-workflow.md`](docs/10-six-principles-one-workflow.md)
+assembles the whole fence, with the adoption ladder.
 
 ---
 
-## The four ideas, briefly
+## The six principles, briefly
 
 **Spec-driven development.** The specification is the durable artifact. Code is
 the output. A story is written so the implementing agent needs only that story
@@ -366,6 +383,19 @@ lands. The pattern that makes them adoptable in a repo that already has debt is
 the baseline: snapshot what is failing today, then fail only on failures that
 are new. A gate that goes red on day one for reasons you did not cause is a
 gate that gets disabled by day three.
+
+**Loop engineering.** A repeating agent cycle is a loop; run it unattended and its
+correctness must never depend on the model's good behavior. Fresh session per
+phase, gates over markers, dry-run every execution path, bounded self-improvement
+through one LEARNINGS file. Every loop incident is a phase failure, a gate
+failure, an honest blocker, or a wiring mistake — diagnose by class first.
+See [`docs/08-loop-engineering.md`](docs/08-loop-engineering.md).
+
+**Graphify.** The dominant cost of agentic work is the context feed. Index the
+repo once into a navigable graph — AST extraction is deterministic and free,
+semantic extraction cached and incremental — then answer questions by traversing
+the neighborhood, with a token budget, instead of re-reading the corpus.
+See [`docs/09-graphify.md`](docs/09-graphify.md).
 
 ### Credit where due
 
@@ -402,6 +432,19 @@ the fence; the ideas have parents, and they deserve the traffic:
   [lefthook](https://github.com/evilmartians/lefthook)) and the CI canon
   (Humble & Farley, Fowler) are mapped in
   [`docs/06-further-reading.md`](docs/06-further-reading.md).
+- **Loop engineering.** The term circulates in the agentic-engineering discourse
+  alongside context engineering and compound engineering —
+  [Every's guide](https://every.to/guides/compound-engineering) contrasts the
+  mindsets. pagar's laws are distilled from running an unattended story loop on
+  a production project, incident by incident; no single external source gets
+  or should get sole credit.
+- **Graphify.** The tool is the open-source
+  [graphify](https://github.com/Graphify-Labs/graphify) by Safi Shamsi (PyPI
+  package [`graphifyy`](https://pypi.org/project/graphifyy/), site
+  [graphify.net](https://graphify.net)). pagar contributes the method —
+  navigation over re-reading, budgets over binges — and ships an
+  operating-manual skill for the tool in the starter kit. Local tree-sitter
+  ASTs, your code never leaves the machine.
 
 ---
 
@@ -416,6 +459,9 @@ the fence; the ideas have parents, and they deserve the traffic:
 | Make tests mean something when an agent writes them | [`docs/03-tdd-with-agents.md`](docs/03-tdd-with-agents.md) |
 | Make the workflow get cheaper over time | [`docs/04-compound-engineering.md`](docs/04-compound-engineering.md) |
 | Stop broken code before it lands | [`docs/05-local-ci-enforcement.md`](docs/05-local-ci-enforcement.md) |
+| Run agent loops unattended, honestly | [`docs/08-loop-engineering.md`](docs/08-loop-engineering.md) |
+| Pay context for the question, not the repo | [`docs/09-graphify.md`](docs/09-graphify.md) |
+| See all six assembled into one workflow | [`docs/10-six-principles-one-workflow.md`](docs/10-six-principles-one-workflow.md) |
 | Use this with Codex, Kiro, Antigravity, or Cursor | [`docs/07-agent-tools.md`](docs/07-agent-tools.md) |
 | Go deeper, outside this repo | [`docs/06-further-reading.md`](docs/06-further-reading.md) |
 

@@ -22,3 +22,6 @@ build/
 .DS_Store
 .idea/
 *.swp
+
+# graphify build output: derived index, rebuild with `graphify --update`
+graphify-out/
