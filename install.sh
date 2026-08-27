@@ -40,8 +40,10 @@ mkdir -p -- "$TARGET" || die "cannot create target directory '$TARGET'" 1
 # Locate a pagar source: an explicit checkout, this checkout, or a download.
 SRC="${PAGAR_SRC:-}"
 if [ -z "$SRC" ]; then
-  script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
-  [ -f "$script_dir/gates/run-gates.mjs" ] && SRC="$script_dir"
+  script_dir=$(unset CDPATH; cd -- "$(dirname -- "$0")" && pwd)
+  if [ -f "$script_dir/gates/run-gates.mjs" ]; then
+    SRC="$script_dir"
+  fi
 fi
 TMPDIR_INSTALL=""
 cleanup() { [ -n "$TMPDIR_INSTALL" ] && rm -rf "$TMPDIR_INSTALL"; return 0; }
@@ -61,11 +63,14 @@ if [ -z "$SRC" ]; then
       || die "download failed: $URL" 2
   fi
   SRC=$(find "$TMPDIR_INSTALL" -mindepth 1 -maxdepth 1 -type d | head -n 1)
-  [ -n "$SRC" ] && [ -f "$SRC/gates/run-gates.mjs" ] \
-    || die "downloaded archive did not contain gates/run-gates.mjs" 2
+  if [ -z "$SRC" ] || [ ! -f "$SRC/gates/run-gates.mjs" ]; then
+    die "downloaded archive did not contain gates/run-gates.mjs" 2
+  fi
 fi
 
-[ -f "$SRC/gates/run-gates.mjs" ] || die "no gates/ under PAGAR_SRC='$SRC'" 1
+if [ ! -f "$SRC/gates/run-gates.mjs" ]; then
+  die "no gates/ under PAGAR_SRC='$SRC'" 1
+fi
 
 say ">> installing gates/ into $TARGET"
 mkdir -p "$TARGET/gates"
