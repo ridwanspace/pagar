@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- "Credit where due" section in the README under the four ideas, attributing
+  each to its origin: spec-driven development to spec-kit and the BMAD method,
+  TDD to Kent Beck plus the mutation-testing tools, compound engineering to
+  Kieran Klaassen at Every, baseline semantics to RuboCop, FlakeHell,
+  Betterer, and cargo-insta. Matching credit notes added to
+  `docs/02-spec-driven-development.md`, `docs/04-compound-engineering.md`, and
+  `docs/06-further-reading.md`.
+
 ## [0.1.0] - 2026-08-27
 
 Initial public release.

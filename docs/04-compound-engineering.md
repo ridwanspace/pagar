@@ -9,6 +9,12 @@ quietly, and why some knowledge belongs in your local workflow and some belongs 
 **Compound engineering: an engineering loop where finishing a task makes the next task cheaper,
 permanently.**
 
+The term is not ours. It was coined by Kieran Klaassen at Every, battle-tested building their
+AI product Cora. The original guide is at
+<https://every.to/guides/compound-engineering>, and Every ships the idea as an open-source
+plugin: <https://github.com/everyinc/compound-engineering-plugin>. What follows is pagar's
+version of the same principle: plain files, no plugin, any agent.
+
 Every word is load-bearing.
 
 - **Finishing** a task, not starting one. The asset is produced at the end, from what you

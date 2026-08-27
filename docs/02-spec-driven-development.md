@@ -4,6 +4,15 @@
 output, what a story file must contain to be handed to an agent unsupervised, and why a
 document written by another team is a set of hypotheses rather than a set of requirements.
 
+## Standing on shoulders
+
+The agentic version of this idea has parents. [GitHub's spec-kit](https://github.com/github/spec-kit)
+makes specify → plan → tasks an installable workflow. The [BMAD method](https://github.com/bmad-code-org/bmad-method)
+runs analyst, architect, PM, dev, and QA as agent personas from plan down to story-level
+implementation. This page is a lighter, copy-in take on the same bet: plain markdown, no
+install, any agent. The book lineage — Cockburn, Adzic, Patton — is listed in
+[06-further-reading.md](06-further-reading.md).
+
 ## The inversion
 
 Normal practice treats code as the asset and the spec as paperwork that goes stale the day

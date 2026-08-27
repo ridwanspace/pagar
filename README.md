@@ -367,6 +367,42 @@ the baseline: snapshot what is failing today, then fail only on failures that
 are new. A gate that goes red on day one for reasons you did not cause is a
 gate that gets disabled by day three.
 
+### Credit where due
+
+None of the four ideas started here. pagar's contribution is the assembly and
+the fence; the ideas have parents, and they deserve the traffic:
+
+- **Spec-driven development.** The agentic lineage:
+  [GitHub's spec-kit](https://github.com/github/spec-kit), for making
+  specify-plan-tasks an installable workflow, and the
+  [BMAD method](https://github.com/bmad-code-org/bmad-method), for running
+  analyst, architect, PM, dev, and QA as agent personas from plan down to
+  story-level implementation. pagar's PRD → epics → stories tree is a lighter,
+  copy-in take on the same bet. The book lineage — Cockburn, Adzic, Patton —
+  is mapped in [`docs/06-further-reading.md`](docs/06-further-reading.md).
+- **TDD with teeth.** The loop, and the rule that a test earns trust by being
+  watched to fail, are Kent Beck's, from *Test-Driven Development: By Example*
+  (2002). Mutation verification is the manual, once-per-guard version of what
+  [Stryker](https://stryker-mutator.io), `mutmut`, and `cosmic-ray` automate.
+- **Compound engineering.** The term and the loop belong to Kieran Klaassen at
+  Every — captured skills and plans so every task starts ahead of the last
+  one. Read the [original guide](https://every.to/guides/compound-engineering);
+  Every also ships the idea as an open-source
+  [plugin](https://github.com/everyinc/compound-engineering-plugin). pagar's
+  two loops ([`docs/04`](docs/04-compound-engineering.md)) are the same
+  principle written as plain files no agent vendor owns.
+- **Local CI enforcement and baselines.** The baseline ratchet is an old,
+  honored idea: RuboCop's
+  [`--auto-gen-config`](https://docs.rubocop.org/rubocop/configuration.html),
+  [FlakeHell's `baseline`](https://flakehell.readthedocs.io/commands/baseline.html),
+  [Betterer](https://github.com/phenomnomnominal/betterer), and
+  [cargo-insta](https://insta.rs) all park known failures and fail only on new
+  ones — each inside its own ecosystem. pagar applies the semantics to every
+  gate at once. The hook runners ([pre-commit](https://pre-commit.com),
+  [lefthook](https://github.com/evilmartians/lefthook)) and the CI canon
+  (Humble & Farley, Fowler) are mapped in
+  [`docs/06-further-reading.md`](docs/06-further-reading.md).
+
 ---
 
 ## Start here

@@ -109,8 +109,8 @@ self-sufficient story file beats a complete PRD.
 
 ## Tools with adjacent ideas
 
-pagar did not invent baselines or gates. These are the tools that shaped the
-thinking, and what pagar takes from each.
+pagar did not invent baselines, gates, or the compound loop. These are the
+tools and methods that shaped the thinking, and what pagar takes from each.
 
 **RuboCop's `--auto-gen-config` / `.rubocop_todo.yml`.** The canonical lint
 ratchet: existing violations are parked in a TODO file and only new ones fail.
@@ -140,6 +140,21 @@ workflow (`/speckit.specify`, `plan`, `tasks`, `implement`) as an installed
 CLI. pagar's spec pipeline is plain markdown you copy in, and pagar adds the
 half spec-kit leaves out: enforcement. A gate that blocks the merge is worth
 more than a prompt that asks nicely.
+
+**BMAD method, <https://github.com/bmad-code-org/bmad-method>.** "Breakthrough
+Method for Agile AI-Driven Development." Analyst, architect, PM, dev, and QA
+run as agent personas through a structured plan-to-story workflow. The closest
+cousin of pagar's spec pipeline, with the opposite center of gravity: BMAD
+orchestrates the people-shapes around the work; pagar guards the artifacts the
+work produces.
+
+**Every's compound engineering, <https://every.to/guides/compound-engineering>.**
+Where the term and the loop come from. Kieran Klaassen's method — brainstorm,
+plan, build, review, capture — so each task starts ahead of the last, developed
+building Every's AI product Cora. Open-sourced as a plugin:
+<https://github.com/everyinc/compound-engineering-plugin>. pagar's
+[two loops](04-compound-engineering.md) are the same principle as plain files
+an agent of any brand can read.
 
 ## If you only read three
 
