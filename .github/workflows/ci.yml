@@ -33,7 +33,7 @@ jobs:
         run: node gates/run-gates.mjs
 
   example-python:
-    name: example: python-flask
+    name: "example: python-flask"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -48,7 +48,7 @@ jobs:
         run: node ../../gates/run-gates.mjs
 
   example-node:
-    name: example: node-react
+    name: "example: node-react"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -63,7 +63,7 @@ jobs:
         run: node ../../gates/run-gates.mjs
 
   example-go:
-    name: example: go
+    name: "example: go"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -75,7 +75,7 @@ jobs:
         run: node ../../gates/run-gates.mjs
 
   example-java:
-    name: example: java-spring
+    name: "example: java-spring"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
